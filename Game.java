@@ -10,7 +10,7 @@ public class Game {
     private Scanner scanner;
     private boolean gameOver;
     private CardColor chosenColor;
-    private int pendingDrawCards; // For accumulating draw cards
+    private int pendingDrawCards; 
     private boolean skipNextPlayer;
     private boolean drawCardPlayed;
     
@@ -30,12 +30,12 @@ public class Game {
     public void setupGame() {
         System.out.println("=== UNO GAME ===\n");
         
-        // Ask for number of players (2 to 10)
+        // number of players should be between 2 and 10
         int numberOfPlayers = 0;
         while (numberOfPlayers < 2 || numberOfPlayers > 10) {
             System.out.print("How many players? (2-10): ");
             numberOfPlayers = scanner.nextInt();
-            scanner.nextLine(); // Clear buffer
+            scanner.nextLine();
             
             if (numberOfPlayers < 2 || numberOfPlayers > 10) {
                 System.out.println("Invalid number. Choose between 2 and 10 players.");
@@ -55,14 +55,14 @@ public class Game {
         
         System.out.println("\n" + players.size() + " players are ready to play!");
         
-        // Deal 7 cards to each player
+        // Give each player 7 cards
         for (Player player : players) {
             List<Card> initialCards = deck.drawCards(7);
             player.addCards(initialCards);
             System.out.println(player.getName() + " receives 7 cards.");
         }
         
-        // Draw first card (cannot be a WILD special card)
+        // Draw first card
         Card firstCard;
         do {
             firstCard = deck.drawCard();
@@ -88,7 +88,7 @@ public class Game {
             if (!gameOver && !drawCardPlayed) {
                 nextPlayer();
             }
-            drawCardPlayed = false; // Reset for next turn
+            drawCardPlayed = false;
         }
         
         endGame();
@@ -106,7 +106,7 @@ public class Game {
         System.out.println("\n=== " + currentPlayer.getName().toUpperCase() + "'S TURN ===");
         System.out.println("Top card: " + topCard);
         
-        // Show current color (especially after a Wild card)
+        // Show current color
         if (chosenColor != null && topCard.getColor() == CardColor.WILD) {
             System.out.println("Current color: " + chosenColor.name());
         }
@@ -126,7 +126,7 @@ public class Game {
         if (pendingDrawCards > 0) {
             List<Card> stackableCards = getStackableCards(currentPlayer);
             if (!stackableCards.isEmpty()) {
-                System.out.println("\n⚠️  There are " + pendingDrawCards + " cards to draw!");
+                System.out.println("\n  There are " + pendingDrawCards + " cards to draw!");
                 System.out.println("You can stack these cards to pass the penalty:");
                 for (int i = 0; i < stackableCards.size(); i++) {
                     System.out.println((i + 1) + ". " + stackableCards.get(i));
@@ -142,7 +142,7 @@ public class Game {
                         deck.addToDiscardPile(playedCard);
                         System.out.println("\n" + currentPlayer.getName() + " plays: " + playedCard);
                         
-                        // Add to pending draw cards (STACKING!)
+                        // Add to pending draw cards
                         if (playedCard.getType() == CardType.DRAW_TWO) {
                             pendingDrawCards += 2;
                         } else if (playedCard.getType() == CardType.WILD_DRAW_FOUR) {
@@ -151,7 +151,7 @@ public class Game {
                         
                         System.out.println("Penalty increased to " + pendingDrawCards + " cards!");
                         
-                        // If it's a Wild card, ask for a color
+                        // If it's a Wild card , set a color
                         if (playedCard.getColor() == CardColor.WILD) {
                             chooseColor(currentPlayer);
                         } else {
@@ -199,7 +199,7 @@ public class Game {
     private List<Card> getStackableCards(Player player) {
         List<Card> stackableCards = new ArrayList<>();
         
-        // With house rules: +2 can stack on +2, +4 can stack on +4, +2 can stack on +4, etc.
+        
         for (Card card : player.getHand()) {
             if (card.getType() == CardType.DRAW_TWO || card.getType() == CardType.WILD_DRAW_FOUR) {
                 stackableCards.add(card);
@@ -212,7 +212,7 @@ public class Game {
     private List<Card> getPlayableCardsForPlayer(Player player, Card topCard) {
         List<Card> playableCards = new ArrayList<>();
         
-        // If player is skipped, they cannot play
+        // If player is skipped,
         if (skipNextPlayer) {
             return playableCards;
         }
@@ -274,7 +274,7 @@ public class Game {
                 
                 if (player.hasUno()) {
                     System.out.print("Do you want to say UNO? (y/n): ");
-                    scanner.nextLine(); // Clear buffer
+                    scanner.nextLine();
                     String answer = scanner.nextLine();
                     if (answer.equalsIgnoreCase("y")) {
                         player.callUno();
@@ -298,7 +298,7 @@ public class Game {
         System.out.print("Your choice (1-4): ");
         
         int colorChoice = scanner.nextInt();
-        scanner.nextLine(); // Clear buffer
+        scanner.nextLine();
         
         switch (colorChoice) {
             case 1:
@@ -331,7 +331,7 @@ public class Game {
             player.addCard(drawnCard);
             System.out.println(player.getName() + " draws: " + drawnCard);
             
-            // Clear buffer before asking for response
+            
             scanner.nextLine();
             
             // Check if the drawn card can be played immediately
@@ -422,7 +422,7 @@ public class Game {
         Player currentPlayer = players.get(currentPlayerIndex);
         if (currentPlayer.hasWon()) {
             gameOver = true;
-            System.out.println("\n🎉🎉🎉 " + currentPlayer.getName() + " WINS ! 🎉🎉🎉");
+            System.out.println("\n " + currentPlayer.getName() + " WINS ! CONGRATULATIONS!");
         }
     }
     
