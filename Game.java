@@ -28,7 +28,7 @@ public class Game {
     }
     
     public void setupGame() {
-        System.out.println("=== UNO GAME ===\n");
+        System.out.println("--- UNO GAME ---\n");
         
         // number of players should be between 2 and 10
         int numberOfPlayers = 0;
