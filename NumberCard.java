@@ -1,4 +1,4 @@
-public NumberCard extends Card{
+public class NumberCard extends Card{
     private int number;
 
     public NumberCard(CardColor color, int number){
@@ -19,4 +19,9 @@ public NumberCard extends Card{
         }
         return false;
     }
+    @Override
+    public String getSymbol() {
+        return String.valueOf(number);
+    }
+
 }

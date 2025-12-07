@@ -70,7 +70,7 @@ public class Player {
     }
     
     public void displayHand() {
-        System.out.println("\nMain de " + name + " (" + hand.size() + " cartes):");
+        System.out.println("\n" + name + "'s hand (" + hand.size() + " cards):");
         for (int i = 0; i < hand.size(); i++) {
             System.out.println((i + 1) + ". " + hand.get(i));
         }

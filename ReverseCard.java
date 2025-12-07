@@ -1,4 +1,4 @@
-public ReverseCard extends Card{
+public class ReverseCard extends Card{
 
     public ReverseCard (CardColor color){
         super(color, CardType.REVERSE);
@@ -17,4 +17,3 @@ public ReverseCard extends Card{
     public String getSymbol(){
         return "R";
     }
-}

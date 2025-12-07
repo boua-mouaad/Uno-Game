@@ -1,6 +1,6 @@
-public DrawtwoCard extends Card{
-    public DrawtwoCard(CardColor color){
-        super(color, Cardtype.DRAW_TWO);
+public class DrawTwoCard extends Card{
+    public DrawTwoCard(CardColor color){
+        super(color, CardType.DRAW_TWO);
     }
 
     @Override
@@ -8,7 +8,7 @@ public DrawtwoCard extends Card{
         if(this.color == CardColor.WILD || this.color == topCard.getColor()){
             return true;
         }
-        if(topCard instanceof DrawtwoCard){
+        if(topCard instanceof DrawTwoCard){
             return true;
         }
         return false;

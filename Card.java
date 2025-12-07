@@ -1,29 +1,19 @@
 public abstract class Card{
 
-        
-    public enum CardColor{
-        RED, BLUE, GREEN, YELLOW, WILD
-    }
-    public enum Cardtype{
-        NUMBER, SKIP, REVERSE, DRAW_TWO, WILD, WILD_DRAW_FOUR
-    }
-
-
-
-
     protected CardColor color;
-    protected Cardtype type;
+    protected CardType type;
 
-    public Card(CardColor color, Cardtype type){
+    public Card(CardColor color, CardType type){
         this.color = color;
         this.type = type;
     }
     public CardColor getColor(){
         return color;
     }
-    public Cardtype getType(){
+    public CardType getType(){
         return type;
     }
+    public abstract String getSymbol();
     public abstract boolean canPlayOn(Card topCard);
 
     @Override
@@ -33,4 +23,5 @@ public abstract class Card{
         }
         return color.name().charAt(0) + getSymbol();
     }
+
 }

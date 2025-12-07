@@ -1,11 +1,11 @@
-public SkipCard extends Card{
+public class SkipCard extends Card{
 
-    public SkipCard(Cardcolor color){
+    public SkipCard(CardColor color){
         super(color, CardType.SKIP);
         this.color = color;
     }
     @Override
-    public booleaen canPlayOn(Card topCard){
+    public boolean canPlayOn(Card topCard){
         if(this.color == CardColor.WILD || this.color == topCard.getColor()){
             return true;
         }
@@ -17,5 +17,5 @@ public SkipCard extends Card{
     @Override
     public String getSymbol(){
         return "S";
-    }
+}
 }

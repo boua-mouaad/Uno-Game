@@ -1,4 +1,4 @@
-public WildDrawFourCard extends Card{
+public class WildDrawFourCard extends Card{
 
     public WildDrawFourCard(){
         super(CardColor.WILD, CardType.WILD_DRAW_FOUR);

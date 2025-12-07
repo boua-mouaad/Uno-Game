@@ -1,6 +1,6 @@
-public Wild extends Card{
+public class WildCard extends Card{
 
-    public Wild(){
+    public WildCard(){
         super(CardColor.WILD, CardType.WILD);
     }
 
