@@ -1,27 +1,31 @@
-public abstract class Card{
-
+public abstract class Card {
     protected CardColor color;
     protected CardType type;
 
-    public Card(CardColor color, CardType type){
+    public Card(CardColor color, CardType type) {
         this.color = color;
         this.type = type;
     }
-    public CardColor getColor(){
+
+    public CardColor getColor() {
         return color;
     }
-    public CardType getType(){
+
+    public CardType getType() {
         return type;
     }
+
     public abstract String getSymbol();
-    public abstract boolean canPlayOn(Card topCard);
+
+    public abstract boolean canPlayOn(Card topCard, CardColor chosenColor);
+
+    public abstract void applyEffect(Game game);
 
     @Override
-    public String toString(){
-        if(color == CardColor.WILD){
+    public String toString() {
+        if (color == CardColor.WILD) {
             return getSymbol();
         }
         return color.name().charAt(0) + getSymbol();
     }
-
 }

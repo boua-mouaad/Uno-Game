@@ -1,11 +1,15 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("--- LAUNCHING UNO GAME ---\n");
+        Scanner sc = new Scanner(System.in);
         
-        Game unoGame = new Game();
-        unoGame.setupGame();
-        unoGame.startGame();
+        System.out.println("=== JEU UNO ===");
         
-        System.out.println("\n--- PROGRAM ENDED ---");
+        Game game = new Game();
+        game.setupGame(sc);
+        game.startGame();
+
+        sc.close();
     }
 }

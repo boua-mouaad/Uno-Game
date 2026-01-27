@@ -1,27 +1,38 @@
-public class NumberCard extends Card{
+public class NumberCard extends Card {
     private int number;
 
-    public NumberCard(CardColor color, int number){
+    public NumberCard(CardColor color, int number) {
         super(color, CardType.NUMBER);
         this.number = number;
     }
-    public int getNumber(){
+
+    public int getNumber() {
         return number;
     }
+
     @Override
-    public boolean canPlayOn(Card topCard){
-        if(this.color == CardColor.WILD || this.color == topCard.getColor()){
+    public boolean canPlayOn(Card topCard, CardColor chosenColor) {
+        CardColor activeColor = topCard.getColor() == CardColor.WILD ? chosenColor : topCard.getColor();
+
+        if (this.color == activeColor) {
             return true;
         }
-        if(topCard instanceof NumberCard){
-            NumberCard topNumberCard = (NumberCard) topCard;
-            return this.number == topNumberCard.getNumber();
+
+        if (topCard instanceof NumberCard) {
+            NumberCard n = (NumberCard) topCard;
+            return this.number == n.number;
         }
+
         return false;
     }
+
     @Override
     public String getSymbol() {
         return String.valueOf(number);
     }
 
+    @Override
+    public void applyEffect(Game game) {
+        // Number cards have no effect
+    }
 }

@@ -1,78 +1,121 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Player {
-    private String name;
-    private List<Card> hand;
-    private boolean unoCalled;
-    
+    protected String name;
+    protected Card[] hand;
+    protected int handSize;
+    protected boolean unoCalled;
+
     public Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<>();
+        this.hand = new Card[100]; // Increased size for safety
+        this.handSize = 0;
         this.unoCalled = false;
     }
-    
+
     public void addCard(Card card) {
-        hand.add(card);
+        hand[handSize] = card;
+        handSize++;
         unoCalled = false;
     }
-    
-    public void addCards(List<Card> cards) {
-        hand.addAll(cards);
-        unoCalled = false;
-    }
-    
-    public Card playCard(int cardIndex) {
-        if (cardIndex >= 0 && cardIndex < hand.size()) {
-            return hand.remove(cardIndex);
-        }
-        return null;
-    }
-    
-    public List<Card> getPlayableCards(Card topCard) {
-        List<Card> playableCards = new ArrayList<>();
-        for (Card card : hand) {
-            if (card.canPlayOn(topCard)) {
-                playableCards.add(card);
+
+    public void addCards(Card[] cards) {
+        for (int i = 0; i < cards.length; i++) {
+            if (cards[i] != null) {
+                addCard(cards[i]);
             }
         }
-        return playableCards;
     }
-    
-    public void callUno() {
-        if (hand.size() == 1) {
-            unoCalled = true;
+
+    public Card playCard(int index) {
+        if (index < 0 || index >= handSize) {
+            return null;
         }
+        
+        Card c = hand[index];
+
+        for (int i = index; i < handSize - 1; i++) {
+            hand[i] = hand[i + 1];
+        }
+
+        hand[handSize - 1] = null;
+        handSize--;
+
+        return c;
     }
-    
+
+    public Card[] getPlayableCards(Card topCard, CardColor chosenColor) {
+        Card[] temp = new Card[handSize];
+        int count = 0;
+
+        for (int i = 0; i < handSize; i++) {
+            if (hand[i].canPlayOn(topCard, chosenColor)) {
+                temp[count] = hand[i];
+                count++;
+            }
+        }
+
+        Card[] result = new Card[count];
+        for (int i = 0; i < count; i++) {
+            result[i] = temp[i];
+        }
+
+        return result;
+    }
+
     public boolean hasWon() {
-        return hand.isEmpty();
+        return handSize == 0;
     }
-    
+
     public boolean hasUno() {
-        return hand.size() == 1;
+        return handSize == 1;
     }
-    
-    public boolean hasCalledUno() {
-        return unoCalled;
+
+    public void callUno() {
+        unoCalled = true;
     }
-    
+
     public String getName() {
         return name;
     }
-    
-    public List<Card> getHand() {
-        return hand;
-    }
-    
+
     public int getHandSize() {
-        return hand.size();
+        return handSize;
+    }
+
+    public Card getCard(int index) {
+        if (index < 0 || index >= handSize) {
+            return null;
+        }
+        return hand[index];
+    }
+
+    public int findCardIndex(Card card) {
+        for (int i = 0; i < handSize; i++) {
+            if (hand[i] == card) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public void displayHand() {
+        System.out.println("\nMain de " + name + " (" + handSize + " cartes):");
+
+        for (int i = 0; i < handSize; i++) {
+            System.out.println((i + 1) + ". " + hand[i]);
+        }
     }
     
-    public void displayHand() {
-        System.out.println("\n" + name + "'s hand (" + hand.size() + " cards):");
-        for (int i = 0; i < hand.size(); i++) {
-            System.out.println((i + 1) + ". " + hand.get(i));
+    public boolean hasDrawCardToStack(int pendingDrawCards) {
+        for (int i = 0; i < handSize; i++) {
+            Card card = hand[i];
+            if (pendingDrawCards % 2 == 0 && card instanceof DrawTwoCard) {
+                return true;
+            }
+            if (pendingDrawCards % 4 == 0 && card instanceof WildDrawFourCard) {
+                return true;
+            }
         }
+        return false;
     }
 }

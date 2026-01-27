@@ -1,97 +1,111 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class Deck {
-    private List<Card> drawPile;
-    private List<Card> discardPile;
-    
+    private Card[] drawPile;
+    private int drawPileSize;
+
+    private Card[] discardPile;
+    private int discardPileSize;
+
     public Deck() {
-        drawPile = new ArrayList<>();
-        discardPile = new ArrayList<>();
+        drawPile = new Card[108];
+        discardPile = new Card[108];
+        drawPileSize = 0;
+        discardPileSize = 0;
         createDeck();
     }
-    
+
     private void createDeck() {
         CardColor[] colors = {CardColor.RED, CardColor.YELLOW, CardColor.GREEN, CardColor.BLUE};
-        
-        // Number cards
-        for (CardColor color : colors) {
-            // One zero per color
-            drawPile.add(new NumberCard(color, 0));
-            
-            // Two of each 1-9 per color
-            for (int number = 1; number <= 9; number++) {
-                drawPile.add(new NumberCard(color, number));
-                drawPile.add(new NumberCard(color, number));
+
+        for (int i = 0; i < colors.length; i++) {
+            CardColor color = colors[i];
+
+            drawPile[drawPileSize++] = new NumberCard(color, 0);
+
+            for (int n = 1; n <= 9; n++) {
+                drawPile[drawPileSize++] = new NumberCard(color, n);
+                drawPile[drawPileSize++] = new NumberCard(color, n);
             }
-            
-            // Two of each action card per color
-            drawPile.add(new SkipCard(color));
-            drawPile.add(new SkipCard(color));
-            drawPile.add(new ReverseCard(color));
-            drawPile.add(new ReverseCard(color));
-            drawPile.add(new DrawTwoCard(color));
-            drawPile.add(new DrawTwoCard(color));
+
+            for (int k = 0; k < 2; k++) {
+                drawPile[drawPileSize++] = new SkipCard(color);
+                drawPile[drawPileSize++] = new ReverseCard(color);
+                drawPile[drawPileSize++] = new DrawTwoCard(color);
+            }
         }
-        
-        // Wild cards (4 of each)
+
         for (int i = 0; i < 4; i++) {
-            drawPile.add(new WildCard());
-            drawPile.add(new WildDrawFourCard());
+            drawPile[drawPileSize++] = new WildCard();
+            drawPile[drawPileSize++] = new WildDrawFourCard();
         }
-        
+
         shuffle();
-        System.out.println("A deck of " + drawPile.size() + " cards has been created and shuffled.");
     }
-    
-    public void shuffle() {
-        Collections.shuffle(drawPile);
+
+    private void shuffle() {
+        for (int i = drawPileSize - 1; i > 0; i--) {
+            int j = (int) (Math.random() * (i + 1));
+
+            Card tmp = drawPile[i];
+            drawPile[i] = drawPile[j];
+            drawPile[j] = tmp;
+        }
     }
-    
+
     public Card drawCard() {
-        // If draw pile is empty, recycle discarded cards
-        if (drawPile.isEmpty()) {
-            if (discardPile.size() > 1) {
-                Card topCard = discardPile.remove(discardPile.size() - 1);
-                drawPile.addAll(discardPile);
-                discardPile.clear();
-                discardPile.add(topCard);
-                shuffle();
-                System.out.println("Draw pile has been recycled and shuffled (" + drawPile.size() + " cards).");
-            } else {
-                return null;
-            }
+        if (drawPileSize == 0) {
+            reshuffleFromDiscard();
         }
-        return drawPile.remove(drawPile.size() - 1);
-    }
-    
-    public List<Card> drawCards(int howMany) {
-        List<Card> cards = new ArrayList<>();
-        for (int i = 0; i < howMany; i++) {
-            Card card = drawCard();
-            if (card != null) {
-                cards.add(card);
-            } else {
-                System.out.println("Warning: Not enough cards in the draw pile!");
-                break;
-            }
-        }
-        return cards;
-    }
-    
-    public void addToDiscardPile(Card card) {
-        discardPile.add(card);
-    }
-    
-    public Card getTopDiscardCard() {
-        if (discardPile.isEmpty()) {
+
+        if (drawPileSize == 0) {
             return null;
         }
-        return discardPile.get(discardPile.size() - 1);
+
+        drawPileSize--;
+        Card c = drawPile[drawPileSize];
+        drawPile[drawPileSize] = null;
+        return c;
+    }
+
+    public Card[] drawCards(int n) {
+        Card[] res = new Card[n];
+
+        for (int i = 0; i < n; i++) {
+            res[i] = drawCard();
+        }
+
+        return res;
+    }
+
+    public void addToDiscardPile(Card c) {
+        discardPile[discardPileSize] = c;
+        discardPileSize++;
+    }
+
+    public Card getTopDiscardCard() {
+        if (discardPileSize == 0) return null;
+        return discardPile[discardPileSize - 1];
+    }
+
+    private void reshuffleFromDiscard() {
+        if (discardPileSize <= 1) return;
+
+        Card top = discardPile[discardPileSize - 1];
+        discardPileSize--;
+
+        for (int i = 0; i < discardPileSize; i++) {
+            drawPile[drawPileSize] = discardPile[i];
+            drawPileSize++;
+            discardPile[i] = null;
+        }
+
+        discardPileSize = 0;
+        shuffle();
+
+        discardPile[discardPileSize] = top;
+        discardPileSize++;
     }
     
-    public int getCardsRemaining() {
-        return drawPile.size();
+    public int getDrawPileSize() {
+        return drawPileSize;
     }
 }

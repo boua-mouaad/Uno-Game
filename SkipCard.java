@@ -1,21 +1,28 @@
-public class SkipCard extends Card{
-
-    public SkipCard(CardColor color){
+public class SkipCard extends Card {
+    public SkipCard(CardColor color) {
         super(color, CardType.SKIP);
-        this.color = color;
     }
+
     @Override
-    public boolean canPlayOn(Card topCard){
-        if(this.color == CardColor.WILD || this.color == topCard.getColor()){
+    public boolean canPlayOn(Card topCard, CardColor chosenColor) {
+        CardColor activeColor = topCard.getColor() == CardColor.WILD ? chosenColor : topCard.getColor();
+
+        if (this.color == activeColor) {
             return true;
         }
-        if(topCard instanceof SkipCard){
-            return true;
-        }
-        return false;
+
+        // Can play on another Skip card OR on any card of same color
+        return topCard instanceof SkipCard;
     }
+
     @Override
-    public String getSymbol(){
+    public String getSymbol() {
         return "S";
-}
+    }
+
+    @Override
+    public void applyEffect(Game game) {
+        game.skipNextPlayer();
+        System.out.println("Le prochain joueur est sauté.");
+    }
 }
